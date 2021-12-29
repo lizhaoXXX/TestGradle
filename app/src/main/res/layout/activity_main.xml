@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp"
+    tools:context=".MainActivity">
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt_app"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="app 获取配置信息" />
+
+    <TextView
+        android:id="@+id/tv_app"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#F37835"
+        tools:text="123" />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt_a"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="moduleA 获取配置信息" />
+
+    <TextView
+        android:id="@+id/tv_a"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#F37835"
+        tools:text="123" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt_b"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="moduleB 获取配置信息" />
+
+    <TextView
+        android:id="@+id/tv_b"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#F37835"
+        tools:text="123" />
+
+</LinearLayout>

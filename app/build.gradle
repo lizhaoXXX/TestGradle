@@ -1,0 +1,103 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-parcelize'
+}
+
+android {
+    compileSdk rootProject.ext.android.compileSdk
+
+    defaultConfig {
+        applicationId rootProject.ext.android.applicationId
+        minSdk rootProject.ext.android.minSdkVersion
+        targetSdk rootProject.ext.android.targetSdkVersion
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
+        flavorDimensions  rootProject.ext.android.flavorDimensions
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    //签名信息配置
+    signingConfigs {
+        debug {
+            storeFile file(rootProject.ext.signConfigs.storeFile)
+            storePassword rootProject.ext.signConfigs.storePassword
+            keyAlias = rootProject.ext.signConfigs.keyAlias
+            keyPassword rootProject.ext.signConfigs.keyPassword
+        }
+
+        release {
+            storeFile file(rootProject.ext.signConfigs.storeFile)
+            storePassword rootProject.ext.signConfigs.storePassword
+            keyAlias = rootProject.ext.signConfigs.keyAlias
+            keyPassword rootProject.ext.signConfigs.keyPassword
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            zipAlignEnabled false
+            multiDexEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+            buildConfigField "${rootProject.ext.K_STRING}", "${rootProject.ext.S_TEST_ACCOUNT}", rootProject.ext.testAccount
+            buildConfigField "${rootProject.ext.K_STRING}", "${rootProject.ext.S_CHANNEL}", rootProject.ext.channel
+            buildConfigField "${rootProject.ext.K_BOOLEAN}", "${rootProject.ext.S_APP_IS_RELEASE}",  rootProject.ext.APP_IS_DEBUG
+        }
+
+        release {
+            minifyEnabled true
+            zipAlignEnabled true
+            multiDexEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+            buildConfigField "${rootProject.ext.K_STRING}", "${rootProject.ext.S_TEST_ACCOUNT}", rootProject.ext.testAccount
+            buildConfigField "${rootProject.ext.K_STRING}", "${rootProject.ext.S_CHANNEL}", rootProject.ext.channel
+            buildConfigField "${rootProject.ext.K_BOOLEAN}", "${rootProject.ext.S_APP_IS_RELEASE}",  rootProject.ext.APP_IS_RELEASE
+        }
+    }
+
+    //渠道配置
+    productFlavors {
+        Demo01 {
+            manifestPlaceholders = [CHANNEL_VALUE        : "DemoChannel01",
+                                    BASE_URL_VALUE      : "https://www.baidu.com/"]
+        }
+
+        Demo02 {
+            manifestPlaceholders = [CHANNEL_VALUE        : "DemoChannel02",
+                                    BASE_URL_VALUE      : "https://www.baidu.com/"]
+        }
+
+        Demo03 {
+            manifestPlaceholders = [CHANNEL_VALUE        : "DemoChannel03",
+                                    BASE_URL_VALUE      : "https://www.baidu.com/"]
+        }
+
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    buildFeatures {
+        viewBinding = true
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.core:core-ktx:1.6.0'
+    implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    testImplementation 'junit:junit:4+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation rootProject.ext.dependencies.espresso
+    implementation project(':moduleA')
+    implementation project(':moduleB')
+}

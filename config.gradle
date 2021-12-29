@@ -1,0 +1,70 @@
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
+ext {
+    // Android API 信息
+    android = [compileSdk      : 31,   //编译的SDK版本
+               applicationId   : 'com.azhao.test',  //应用Id
+               minSdkVersion   : 23,    //兼容的最低SDK版本
+               targetSdkVersion: 31,    //用于提高指定版本的设备上程序运行体验
+               versionCode     : 1,     //版本号
+               versionName     : '1.0.0',  //版本名
+               flavorDimensions: 'default',  //版本名
+               multiDexEnabled : true]     //添加多dex分包支持
+
+    // 签名配置
+    signConfigs = ['storeFile'    : '../keystore/release.jks',   //签名文件uri
+                   'storePassword': '123456',                         //密匙库口令
+                   'keyAlias'     : 'release',                        //签名别名
+                   'keyPassword'  : '123456']                         //签名口令
+
+    // 依赖包管理,module同依赖一个lib时使用这个。module单独使用的时候为了方便提示升级，不建议在这里引用。
+    dependencies = ['espresso': 'androidx.test.espresso:espresso-core:3.3.0']
+
+
+    testAccount = "12345"
+    channel = "default"
+    APP_IS_DEBUG = "true"
+    //正常默认
+    APP_IS_RELEASE = "false"
+    S_APP_IS_RELEASE = "APP_IS_DEBUG"
+    S_TEST_ACCOUNT = "TEST_ACCOUNT"
+    S_CHANNEL = "CHANNEL"
+    K_BOOLEAN = "boolean"
+    K_STRING = "String"
+}
+
+task handleMpaasConfig() {
+    def parameter = gradle.getStartParameter().getTaskRequests().toString()
+    println "Build parameter value==" + parameter
+    def re = parameter.contains("assemble") ? "assemble(\\w+)(Release|Debug)" : "generate(\\w+)(Release|Debug)"
+    Pattern pattern = Pattern.compile(re)
+    Matcher matcher = pattern.matcher(parameter)
+
+    if (matcher.find()) {
+        def variant = matcher.group(0)
+        println "Build Variant value==" + variant
+        def start = variant.startsWith("assemble") ? "assemble" : "generate"
+        def end = variant.endsWith("Release") ? "Release" : "Debug"
+        getTestAccount(variant, start, end)
+    }
+}
+
+def getTestAccount(String variant, String start, String end) {
+    if ("Release".equals(end)) {//如果是正式服，则不配置数据
+        ext.testAccount = '""'
+        ext.channel = '""'
+    } else {//根据不同的构建变体名称，创建测试账号
+        if (variant.equals(start + "Demo01" + end)) {
+            ext.testAccount = '"demo1-123456"'
+            ext.channel = '"DemoChannel01"'
+        } else if (variant.equals(start + "Demo02" + end)) {
+            ext.testAccount = '"demo2-123456"'
+            ext.channel = '"DemoChannel02"'
+        } else {
+            println "Build 03 value=="
+            ext.testAccount = '"demo3-123456"'
+            ext.channel = '"DemoChannel03"'
+        }
+    }
+}
